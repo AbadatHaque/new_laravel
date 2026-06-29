@@ -1,8 +1,8 @@
 <?php
 
 namespace App\Http\Controllers\api\v1;
-
 use Illuminate\Http\Request;
+use App\Models\Post;
 
 class PostController
 {
@@ -19,8 +19,13 @@ class PostController
      */
     public function store(Request $request)
     {
-        $user = $request->only('name', 'email');
-        return $user;
+        $validateData = $request->validate([
+        'title'=> 'required|string|min:2',
+        'content'=> ['required', 'max:255']
+        ]);
+        $validateData['user_id'] =1;
+        $data = Post::create($validateData);
+        return $data;
     }
 
     /**
