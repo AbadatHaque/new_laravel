@@ -11,7 +11,7 @@ class PostController
      */
     public function index()
     {
-        return ['message' => 'This is v1 index method'];
+        return response()->json(Post::all());
     }
 
     /**
@@ -33,11 +33,8 @@ class PostController
      */
     public function show(string $id)
     {
-        return [
-            'name'=>'Sk',
-            'email'=>'sk@gmail.com',
-            'message'=>'This is v1 show method',
-        ];
+        $singlePost = Post::findOrFill($id);
+        return response()->json($singlePost);
     }
 
     /**
