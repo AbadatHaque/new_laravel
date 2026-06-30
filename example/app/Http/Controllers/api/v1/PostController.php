@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\api\v1;
 use Illuminate\Http\Request;
 use App\Models\Post;
+use App\Http\Requests\storePostRequest;
+use App\Http\Resources\PostResource;
 
 class PostController
 {
@@ -11,20 +13,17 @@ class PostController
      */
     public function index()
     {
-        return response()->json(Post::all());
+        return PostResource::collection(Post::all());
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StorePostRequest $request)
     {
-        $validateData = $request->validate([
-        'title'=> 'required|string|min:2',
-        'content'=> ['required', 'max:255']
-        ]);
-        $validateData['user_id'] =1;
-        $data = Post::create($validateData);
+        $data = $request->validated();
+        $data['user_id'] =1;
+        Post::create($data);
         return $data;
     }
 
@@ -39,15 +38,11 @@ class PostController
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Post $post)
+    public function update(StorePostRequest $request, Post $post)
     {
-        $validateData = $request->validate([
-          'title'=> 'required|string|min:2',
-        'content'=> ['required', 'max:255']
-        ]);
-       $data =  $post->update($validateData);
-        $request->json($data);
-        return $validateData;
+        $data = $request->validated();
+        $post->json($data);
+        return $data;
     }
 
     /**
@@ -55,7 +50,6 @@ class PostController
      */
     public function destroy(Post $post)
     {
-        // response()->noContent()
         $post->delete();
         return response()->noContent();
     }
