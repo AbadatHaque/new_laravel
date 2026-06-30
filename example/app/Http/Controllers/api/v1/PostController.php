@@ -31,29 +31,32 @@ class PostController
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Post $post)
     {
-        $singlePost = Post::findOrFill($id);
-        return response()->json($singlePost);
+        return response()->json($post);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Post $post)
     {
         $validateData = $request->validate([
-            'name'=> 'required|string|min:2',
-            'email'=> ['required', 'email']
+          'title'=> 'required|string|min:2',
+        'content'=> ['required', 'max:255']
         ]);
+       $data =  $post->update($validateData);
+        $request->json($data);
         return $validateData;
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Post $post)
     {
-        //
+        // response()->noContent()
+        $post->delete();
+        return response()->noContent();
     }
 }
