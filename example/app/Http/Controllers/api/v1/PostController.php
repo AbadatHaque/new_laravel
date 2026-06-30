@@ -11,9 +11,10 @@ class PostController
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        return PostResource::collection(Post::all());
+    public function index(Request $request)
+    {   
+        echo($request->input('author'));
+        return PostResource::collection(Post::with('author')->get());
     }
 
     /**
@@ -21,10 +22,10 @@ class PostController
      */
     public function store(StorePostRequest $request)
     {
-        $data = $request->validated();
+        //$data = $request->validated();
         $data['user_id'] =1;
-        Post::create($data);
-        return $data;
+        $post = Post::create($data);
+        return new PostResource($post);
     }
 
     /**
@@ -32,7 +33,7 @@ class PostController
      */
     public function show(Post $post)
     {
-        return response()->json($post);
+        return response()->json(new PostResource($post));
     }
 
     /**
@@ -41,8 +42,8 @@ class PostController
     public function update(StorePostRequest $request, Post $post)
     {
         $data = $request->validated();
-        $post->json($data);
-        return $data;
+        $post->update($data);
+        return new PostResource($post);
     }
 
     /**

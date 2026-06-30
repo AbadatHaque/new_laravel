@@ -18,7 +18,9 @@ class PostResource extends JsonResource
         return [
             'id'=>$this->id,
             'title'=>$this->title,
-            'auther'=> new UserResource($this->auther)
+            'auther'=> new UserResource($this->whenLoaded('author')),
+            'user'=> $this->mergeWhen($request->input('author'),new UserResource($this->author))
+            // 'auther'=> new UserResource($this->auther)
         ];
     }
 }

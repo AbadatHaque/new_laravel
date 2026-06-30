@@ -8,7 +8,7 @@ class Post extends Model
 {
     protected $fillable =[ 'title','content','user_id'];
 
-    public function auther():BelongsTo // many to one
+    public function author():BelongsTo // many to one
     {
         return $this->belongsTo(User::class, 'user_id');  
     }
